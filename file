@@ -1,0 +1,11 @@
+.post(auth.verifyUser, (req, res, next) => {
+    let task = new Task(req.body);
+    task.owner = req.user._id;
+    task
+      .save()
+      .then(task => {
+        res.statusCode = 201;
+        res.json(task);
+      })
+      .catch(next);
+  })
