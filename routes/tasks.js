@@ -13,7 +13,7 @@ router
         path: 'owner'
       })
       .populate({
-        path: 'category'
+        path: 'categoryType'
       })
       .then(task => {
         if (task == null) throw new Error("Not posted jobs yet.");
@@ -74,6 +74,9 @@ router.route('/myPost')
       .populate({
         path: 'assignedTo'
       })
+      .populate({
+        path: 'categoryType'
+      })
       .then((task) => {
         res.json(task);
       }).catch((err) => next(err))
@@ -86,6 +89,8 @@ router.route('/:id')
   .get(auth.verifyUser, (req, res, next) => {
 
     Task.findOne({ _id: req.params.id })
+    .populate('owner')
+    .populate('categoryType')
         .then((task) => {
         res.json(task);
     
@@ -124,23 +129,7 @@ router.route('/:id/proposal')
   })
 
 
-  // .post(auth.verifyUser, (req, res, next) => {
-
-  //   Task.findById(req.params.id)
-  //     .then((task) => {
-  //       task.proposal.unshift
-  //         ({
-  //           proposalDiscription: req.body.proposalDiscription,
-  //           proposedAmount: req.body.proposedAmount,
-  //           proposedBy: req.user.id,
-  //         });
-  //       task.save({})
-  //         .then((task) => {
-  //           res.json(task);
-  //         })
-  //     }).catch(next);
-  // })
-
+  
 
   .post(auth.verifyUser, (req, res, next) => {
     let task = new Task(req.body);
@@ -177,5 +166,24 @@ router.route('/:id/proposal')
           })
       }).catch(next);
   });
+
+
+  router.route('/myTask')
+  .get(auth.verifyUser, (req, res, next) => {
+    Task.find({ assignedTo: req.user._id })
+      .populate({
+        path: 'owner'
+      })
+      .populate({
+        path: 'assignedTo'
+      })
+      .populate({
+        path: 'categoryType'
+      })
+      .then((task) => {
+        res.json(task);
+      }).catch((err) => next(err))
+  });
+
 
 module.exports = router;

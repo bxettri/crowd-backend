@@ -24,6 +24,7 @@ router
       .catch(next);
 
   })
+
   .post(auth.verifyUser, (req, res, next) => {
     let proposal = new Proposal(req.body);
     proposal.proposedBy = req.user._id;
@@ -46,4 +47,5 @@ router
           }).catch(next);
   })
 
+ 
 module.exports = router;
