@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const User = require('./models/users');
-
 module.exports.verifyUser = (req, res, next) => {
     let authHeader = req.headers.authorization;
     if (!authHeader) {
@@ -21,7 +20,6 @@ module.exports.verifyUser = (req, res, next) => {
             next();
         })
 }
-
 module.exports.verifyAdmin = (req, res, next) => {
     if (!req.user) {
         let err = new Error('Unauthorized');

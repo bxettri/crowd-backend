@@ -4,9 +4,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const router = express.Router();
 const auth = require('../auth');
-
-
-//ROUTES FOR USER REGISTRATION/ SIGNUP
 router.post('/signup', (req, res, next) => {
     let password = req.body.password;
     bcrypt.hash(password, 10, function (err, hash) {
@@ -20,7 +17,6 @@ router.post('/signup', (req, res, next) => {
             email: req.body.email,
             address: req.body.address,
             password: hash
-
         }).then((user) => {
             let token = jwt.sign({ _id: user._id }, process.env.SECRET);
             res.json({ status: "Signup Successful!", token: token });
@@ -28,8 +24,6 @@ router.post('/signup', (req, res, next) => {
         }).catch(next);
     });
 });
-
-//ROUTES FOR USER LOGIN
 router.post('/login', (req, res, next) => {
     User.findOne({ email: req.body.email })
         .then((user) => {
@@ -53,20 +47,12 @@ router.post('/login', (req, res, next) => {
             }
         }).catch(next);
 });
-
-// router.get('/myProfile', auth.verifyUser, (req, res, next) => {
-//     res.json({
-//         _id: req.user._id, fullName: req.user.fullName, phone: req.user.phone,
-//         address: req.user.address, email: req.user.email, profilePicture: req.user.profilePicture
-//     });
-// });
 router.get('/me', auth.verifyUser, (req, res, next)=> {
     
     User.findById(req.user._id).then(user=>{
         res.json(user);
     })
 });
-
 router.route('/:id')
 .get((req, res, next)=> {
     
@@ -74,7 +60,6 @@ router.route('/:id')
         res.json(user);
     })
 });
-
 router.put('/updateProfile', auth.verifyUser, (req, res, next) => {
     User.findByIdAndUpdate(req.user._id, { $set: req.body }, { new: true })
         .then((user) => {
@@ -82,14 +67,10 @@ router.put('/updateProfile', auth.verifyUser, (req, res, next) => {
 
         }).catch(next);
 });
-
 router.get('/userDetails',(req, res, next)=>{
 
     User.findById(req.user._id).then(user=>{
         res.json();
     })
 })
-
-
-
 module.exports = router;

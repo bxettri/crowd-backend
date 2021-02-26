@@ -3,10 +3,8 @@ const Task = require("../models/tasks");
 const auth = require('../auth');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const Proposal = require("../models/proposal");
 const router = express.Router();
-
 router
   .route("/")
   .get((req, res, next) => {
@@ -22,7 +20,6 @@ router
         res.json(proposal);
       })
       .catch(next);
-
   })
   .post(auth.verifyUser, (req, res, next) => {
     let proposal = new Proposal(req.body);
@@ -34,7 +31,6 @@ router
     })
     .catch(next);
   })
-
   router.route('/:id')
   .get((req, res, next) => {
         Proposal.find({ task: req.params.id })
@@ -45,5 +41,4 @@ router
             res.json(task);
           }).catch(next);
   })
-
 module.exports = router;

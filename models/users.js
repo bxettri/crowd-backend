@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const userSchema = new mongoose.Schema({
     profilePicture: {
         type: String
@@ -16,9 +15,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         require: true,
         unique: true
-        
-    },
-  
+    },  
     address: {
         type: String,
         require: true
@@ -34,7 +31,6 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-  
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

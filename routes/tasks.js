@@ -4,7 +4,6 @@ const auth = require('../auth');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
-
 router
   .route("/")
   .get((req, res, next) => {
@@ -21,17 +20,11 @@ router
       })
       .catch(next);
   })
-
-
-
-
-
   .post(auth.verifyUser, (req, res, next) => {
     let task = new Task(req.body);
     task.owner = req.user._id;
     require("../models/category").findOne({ categoryType: req.categoryType })
       .exec().then((categories) => {
-
         task.save({
           taskName: req.body.taskName,
           categoryType: categories.categoryType,
@@ -47,15 +40,11 @@ router
           })
       })
       .catch(next);
-
   })
-
-
   .put((req, res, next) => {
     res.statusCode = 405;
     res.json({ message: "Method not allowed." });
   })
-
   .delete(auth.verifyUser, (req, res, next) => {
     Task.deleteMany({ owner: req.user._id })
       .then(response => {
@@ -64,7 +53,6 @@ router
       })
       .catch(next);
   });
-
 router.route('/myPost')
   .get(auth.verifyUser, (req, res, next) => {
     Task.find({ owner: req.user._id })
@@ -78,10 +66,6 @@ router.route('/myPost')
         res.json(task);
       }).catch((err) => next(err))
   });
-
-
-
-
 router.route('/:id')
   .get(auth.verifyUser, (req, res, next) => {
 
@@ -91,7 +75,6 @@ router.route('/:id')
     
       }).catch(next);
   })
-
   .put((req, res, next) => {
     Task.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
     
@@ -99,7 +82,6 @@ router.route('/:id')
         res.json(task);
       }).catch(next);
   })
-
   .delete(auth.verifyUser, (req, res, next) => {
     Task.findOneAndDelete({ owner: req.user._id, _id: req.params.id })
       .populate({
@@ -110,38 +92,13 @@ router.route('/:id')
       })
       .catch(next);
   });
-
-
 router.route('/:id/proposal')
-
-
   .get((req, res, next) => {
     Task.findById(req.params.id)
-
       .then((task) => {
         res.json(task.proposal);
       }).catch(next);
   })
-
-
-  // .post(auth.verifyUser, (req, res, next) => {
-
-  //   Task.findById(req.params.id)
-  //     .then((task) => {
-  //       task.proposal.unshift
-  //         ({
-  //           proposalDiscription: req.body.proposalDiscription,
-  //           proposedAmount: req.body.proposedAmount,
-  //           proposedBy: req.user.id,
-  //         });
-  //       task.save({})
-  //         .then((task) => {
-  //           res.json(task);
-  //         })
-  //     }).catch(next);
-  // })
-
-
   .post(auth.verifyUser, (req, res, next) => {
     let task = new Task(req.body);
     task.owner = req.user._id;
@@ -165,8 +122,6 @@ router.route('/:id/proposal')
       .catch(next);
 
   })
-
-
   .delete((req, res, next) => {
     Task.findById(req.params.id)
       .then((task) => {
@@ -177,5 +132,4 @@ router.route('/:id/proposal')
           })
       }).catch(next);
   });
-
 module.exports = router;
